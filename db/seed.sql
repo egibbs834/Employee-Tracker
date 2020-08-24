@@ -1,6 +1,5 @@
 USE employees; 
 
--- use below structure to make code easier to read
 INSERT INTO department
     (name)
 VALUES
@@ -22,8 +21,6 @@ VALUES
 INSERT INTO employee                 
     (first_name, last_name, role_id, manager_id)
 VALUES
-    -- role_id is matching the id from the role table, manager_id I'm just making up
-    -- seeding didn't working until we put manager_id in numbered order
     ("Billy", "Salesboy", 1, 1),
     ("Manoli", "Jones", 2, 2),
     ("Hojin", "Softwareboy", 2, NULL),

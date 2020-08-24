@@ -24,7 +24,6 @@ CREATE TABLE employee (
    role_id INT UNSIGNED NOT NULL, 
    INDEX role_ind (role_id), 
    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE,
-    -- we don't use NOT NULL cause not every employee is a manager, so we don't automatically want to give them a manager id 
    manager_id INT UNSIGNED, 
    INDEX man_ind (manager_id), 
    CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
