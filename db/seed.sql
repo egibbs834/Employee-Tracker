@@ -19,14 +19,15 @@ VALUES
     ("HR Rep", 80000, 3), 
     ("IT Tech", 70000, 4);
 
-INSERT INTO employee
+INSERT INTO employee                 
     (first_name, last_name, role_id, manager_id)
 VALUES
     -- role_id is matching the id from the role table, manager_id I'm just making up
-    ("Billy", "Salesboy", 1, 12),
-    ("Manoli", "Jones", 2, 100),
+    -- seeding didn't working until we put manager_id in numbered order
+    ("Billy", "Salesboy", 1, 1),
+    ("Manoli", "Jones", 2, 2),
     ("Hojin", "Softwareboy", 2, NULL),
     ("Sally", "Juniorboy", 2, NULL),
-    ("Davie", "Hrboy", 3, 33), 
-    ("Ed", "Gibbons", 4, 400); 
+    ("Davie", "Hrboy", 3, 3), 
+    ("Ed", "Gibbons", 4, 4); 
     
