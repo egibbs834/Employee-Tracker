@@ -38,7 +38,11 @@ function menuOptions() {
                 "Add Department",
                 "Add Role",
                 "Add Employee", 
-                "Update Employee's Role"
+                "Update Employee's Role",
+                "Delete Department",
+                "Delete Role",
+                "Delete Employee",
+                "Exit"
             ]
         })
         .then(answer => {
@@ -71,12 +75,28 @@ function menuOptions() {
                 updateEmpRole();
                 break;
 
-                // need an exit option
+                case "Delete Department":
+                deleteDepartment();
+                break;
+
+                case "Delete Role":
+                deleteRole();
+                break;
+
+                case "Delete Employee":
+                deleteEmployee();
+                break;
+
+                case "Exit":
+                end();
+                break;
             }
         });
 }
 
-// create functions:
+// #############################################
+// FUNCTIONS
+// #############################################
 
 // view departments
 function viewDepartments(){
@@ -92,14 +112,14 @@ function viewDepartments(){
              });
         }
         // show all departments
-        console.log(data);
+        console.table(data);
         menuOptions();
     });
 }
 
 // view roles
 function viewRoles(){
-    const query = `SELECT id, title FROM employees_db.role;`;
+    const query = `SELECT * FROM employees_db.role;`;
     connection.query(query, (err, res) => {
         if (err) throw err;
         // put roles into an empty array
@@ -107,18 +127,20 @@ function viewRoles(){
         for (let i = 0; i < res.length; i++) {
             data.push({
                 "ID": res[i].id,
-                "Title": res[i].title
+                "Title": res[i].title,
+                "Salary": res[i].salary,
+                "Department ID": res[i].department_id
              });
         }
         // show all roles
-        console.log(data);
+        console.table(data);
         menuOptions();        
     });
 }
 
 // view all employees
 function viewEmployees(){
-    const query = `SELECT id, first_name, last_name FROM employees_db.employee;`;
+    const query = `SELECT * FROM employees_db.employee;`;
     connection.query(query, (err, res) => {
         if (err) throw err;
         // put all employees into an empty array
@@ -127,12 +149,12 @@ function viewEmployees(){
             data.push({
                 "ID": res[i].id,
                 "First": res[i].first_name, 
-                "Last": res[i].last_name
-
+                "Last": res[i].last_name,
+                "role_id": res[i].role_id,
+                "manager_id": res[i].manager_id
              });
         }
-        // show all roles
-        console.log(data);
+        console.table(data);
         menuOptions();        
     });
 }
@@ -144,13 +166,11 @@ function addDepartment() {
             type: "input",
             name: "departmentName",
             message: "Enter Department Name: "
-
-    }).then(function (answer) {
+   
+        }).then(function (answer) {
         connection.query("INSERT INTO department (name) VALUES (?)", [answer.departmentName], function (err, res) {
             if (err) throw err;
-            // console.table(res)
             console.log("Department Added");
-            viewDepartments();
             menuOptions();
         })
     });
@@ -180,9 +200,7 @@ function addRole() {
         connection.query("INSERT INTO role (title, salary, department_id) VALUES (?,?,?)", 
         [answer.roleName, answer.salary, answer.departmentID], function (err, res) {
             if (err) throw err;
-            // console.table(res)
             console.log("Role Added");
-            viewRoles();
             menuOptions();
         })
     });
@@ -217,9 +235,7 @@ function addEmployee() {
         connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)", 
         [answer.firstName, answer.lastName, answer.roleID, answer.managerID], function (err, res) {
             if (err) throw err;
-            // console.table(res)
             console.log("Employee Added");
-            viewEmployees();
             menuOptions();
         })
     });
@@ -244,10 +260,68 @@ function updateEmpRole() {
         connection.query("UPDATE employee SET role_id=? WHERE id=?", 
         [answer.newRole, answer.whichEmployee], function (err, res) {
             if (err) throw err;
-            // console.table(res)
             console.log("Role Added");
-            viewEmployees();
             menuOptions();
         })
     });
+}
+
+// delete department
+function deleteDepartment() {
+    inquirer
+        .prompt({
+            type: "input",
+            message: "Enter Department Name:",
+            name: "departmentName"
+        })
+        .then(function (answer) {
+            connection.query("DELETE FROM department WHERE name=?", 
+            [answer.departmentName], function (err, res) {
+                if (err) throw err;
+                console.log("Department Deleted");
+                menuOptions();
+            });
+        });
+}
+
+// delete role
+function deleteRole() {
+    inquirer
+        .prompt({
+            type: "input",
+            message: "Enter Role ID#:",
+            name: "roleID"
+        })
+        .then(function (answer) {
+            connection.query("DELETE FROM role WHERE id=?", 
+            [answer.roleID], function (err, res) {
+                if (err) throw err;
+                console.log("Role Deleted");
+                menuOptions();
+            });
+        });
+}
+
+// delete role
+function deleteEmployee() {
+    inquirer
+        .prompt({
+            type: "input",
+            message: "Enter Employee ID#:",
+            name: "employeeID"
+        })
+        .then(function (answer) {
+            connection.query("DELETE FROM employee WHERE id=?", 
+            [answer.employeeID], function (err, res) {
+                if (err) throw err;
+                console.log("Employee Deleted");
+                menuOptions();
+            });
+        });
+}
+
+//function to end app
+function end() {
+    connection.end();
+    process.exit();
 }
