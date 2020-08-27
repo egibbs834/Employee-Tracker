@@ -101,7 +101,6 @@ function viewDepartments(){
              });
         }
         // show all departments
-        console.log(data);
         render("Departments", data);
     });
 }
