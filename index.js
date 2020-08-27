@@ -29,12 +29,6 @@ connection.connect(function (err) {
 // function runApp()
 menuOptions();
 
-function render(title, data){
-    console.log(title);
-    console.log(data);
-    menuOptions();
-}
-
 // menu options for user using inquirer package
 function menuOptions() {
     inquirer
@@ -88,11 +82,13 @@ function menuOptions() {
 }
 
 // create functions:
+
+// view departments
 function viewDepartments(){
     const query = `SELECT id, name FROM employees_db.department;`;
     connection.query(query, (err, res) => {
         if (err) throw err;
-        //extract department names to array
+        //put departments into an array
         const data = [];
         for (let i = 0; i < res.length; i++) {
             data.push({
@@ -101,9 +97,31 @@ function viewDepartments(){
              });
         }
         // show all departments
-        render("Departments", data);
+        console.log(data);
+        menuOptions();
     });
 }
+
+// view droles
+function viewRoles(){
+    const query = `SELECT id, title FROM employees_db.role;`;
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        // put roles into an empty array
+        const data = [];
+        for (let i = 0; i < res.length; i++) {
+            data.push({
+                "ID": res[i].id,
+                "Title": res[i].title
+             });
+        }
+        // show all roles
+        console.log(data);
+        menuOptions();
+        
+    });
+}
+
 
 // viewRoles();
 // viewEmployees();
