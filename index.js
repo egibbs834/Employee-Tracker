@@ -3,10 +3,6 @@ const inquirer = require('inquirer');
 const consoleTable = require('console.table');
 const mysql = require('mysql');
 
-    // below: bring in Greg's suggestion of making a DAtabase class
-// const Database = require('./lib/Database');
-// useswitch case for inquirer prompts depending on option user selects
-
 // MySQL database connection info (add your password)
 const connection = mysql.createConnection({
     host: "localhost",
@@ -26,7 +22,6 @@ connection.connect(function (err) {
 });
 
 // start the app here
-// function runApp()
 menuOptions();
 
 // menu options for user using inquirer package
@@ -121,6 +116,7 @@ function viewRoles(){
     });
 }
 
+// view all employees
 function viewEmployees(){
     const query = `SELECT id, first_name, last_name FROM employees_db.employee;`;
     connection.query(query, (err, res) => {
@@ -141,6 +137,7 @@ function viewEmployees(){
     });
 }
 
+// add a department
 function addDepartment() {
     inquirer
         .prompt({
@@ -159,6 +156,7 @@ function addDepartment() {
     });
 }
 
+// add a new role
 function addRole() {
     inquirer
         .prompt([
@@ -190,11 +188,66 @@ function addRole() {
     });
 }
 
+// add employee
+function addEmployee() {
+    inquirer
+        .prompt([
+            {
+            type: "input",
+            name: "firstName",
+            message: "Enter Employee's First Name: "
+            }, 
+            {
+            type: "input",
+            name: "lastName",
+            message: "Enter Employee's Last Name: "
+            },
+            {
+            type: "input",
+            name: "roleID",
+            message: "Enter Employee's Role ID: "
+            },
+            {
+            type: "input",
+            name: "managerID",
+            message: "Enter Employee's Manager ID: "
+            }
+        ])     
+        .then(function (answer) {
+        connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)", 
+        [answer.firstName, answer.lastName, answer.roleID, answer.managerID], function (err, res) {
+            if (err) throw err;
+            // console.table(res)
+            console.log("Employee Added");
+            viewEmployees();
+            menuOptions();
+        })
+    });
+}
 
-
-
-
-// addDepartment();
-// addRole();
-// addEmployee();
-// updateEmpRole();
+// update employee role
+function updateEmpRole() {
+    inquirer
+        .prompt([
+            {
+            type: "input",
+            name: "whichEmployee",
+            message: "Enter ID# of Employee: "
+            }, 
+            {
+            type: "input",
+            name: "newRole",
+            message: "Enter New Role: "
+            }            
+        ])     
+        .then(function (answer) {
+        connection.query("UPDATE employee SET role_id=? WHERE id=?", 
+        [answer.newRole, answer.whichEmployee], function (err, res) {
+            if (err) throw err;
+            // console.table(res)
+            console.log("Role Added");
+            viewEmployees();
+            menuOptions();
+        })
+    });
+}
