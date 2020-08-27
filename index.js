@@ -22,13 +22,20 @@ connection.connect(function (err) {
         return;
     }
     console.log("connected as id " + connection.threadId);
-    runApp()
+    // runApp()
 });
 
-function runApp(){
+// start the app here
+// function runApp()
+menuOptions();
 
-};
+function render(title, data){
+    console.log(title);
+    console.log(data);
+    menuOptions();
+}
 
+// menu options for user using inquirer package
 function menuOptions() {
     inquirer
         .prompt({
@@ -79,3 +86,29 @@ function menuOptions() {
             }
         });
 }
+
+// create functions:
+function viewDepartments(){
+    const query = `SELECT id, name FROM employees_db.department;`;
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        //extract department names to array
+        const data = [];
+        for (let i = 0; i < res.length; i++) {
+            data.push({
+                "ID": res[i].id,
+                "Departments": res[i].name
+             });
+        }
+        // show all departments
+        console.log(data);
+        render("Departments", data);
+    });
+}
+
+// viewRoles();
+// viewEmployees();
+// addDepartment();
+// addRole();
+// addEmployee();
+// updateEmpRole();
