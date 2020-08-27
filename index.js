@@ -122,7 +122,7 @@ function viewRoles(){
 }
 
 function viewEmployees(){
-    const query = `SELECT id, first_name, last_name, role.title FROM employees_db.employee;`;
+    const query = `SELECT id, first_name, last_name FROM employees_db.employee;`;
     connection.query(query, (err, res) => {
         if (err) throw err;
         // put all employees into an empty array
@@ -141,6 +141,23 @@ function viewEmployees(){
     });
 }
 
+function addDepartment() {
+    inquirer
+        .prompt({
+            type: "input",
+            name: "departmentName",
+            message: "Enter Department Name: "
+
+    }).then(function (answer) {
+        connection.query("INSERT INTO department (name) VALUES (?)", [answer.departmentName], function (err, res) {
+            if (err) throw err;
+            // console.table(res)
+            console.log("Department Added");
+            viewDepartments();
+            menuOptions();
+        })
+    });
+}
 
 // addDepartment();
 // addRole();
