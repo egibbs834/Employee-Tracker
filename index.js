@@ -102,7 +102,7 @@ function viewDepartments(){
     });
 }
 
-// view droles
+// view roles
 function viewRoles(){
     const query = `SELECT id, title FROM employees_db.role;`;
     connection.query(query, (err, res) => {
@@ -117,14 +117,31 @@ function viewRoles(){
         }
         // show all roles
         console.log(data);
-        menuOptions();
-        
+        menuOptions();        
+    });
+}
+
+function viewEmployees(){
+    const query = `SELECT id, first_name, last_name, role.title FROM employees_db.employee;`;
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        // put all employees into an empty array
+        const data = [];
+        for (let i = 0; i < res.length; i++) {
+            data.push({
+                "ID": res[i].id,
+                "First": res[i].first_name, 
+                "Last": res[i].last_name
+
+             });
+        }
+        // show all roles
+        console.log(data);
+        menuOptions();        
     });
 }
 
 
-// viewRoles();
-// viewEmployees();
 // addDepartment();
 // addRole();
 // addEmployee();
